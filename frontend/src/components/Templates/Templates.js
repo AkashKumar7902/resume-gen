@@ -181,7 +181,7 @@ const Templates = () => {
           <Button onClick={() => setOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="secondary">
+          <Button onClick={confirmDelete} color="secondary" disabled>
             Delete
           </Button>
         </DialogActions>

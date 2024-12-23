@@ -11,6 +11,8 @@ import {
   Box,
   Collapse,
   Stack,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
@@ -32,9 +34,14 @@ const Experiences = () => {
     link: "",
     certificate: "",
   });
-  const [editingId, setEditingId] = useState(null); // Changed from index to id
+  const [editingIndex, setEditingIndex] = useState(null); // Using index
   const [editedExp, setEditedExp] = useState({});
   const [isAddOpen, setIsAddOpen] = useState(false); // State to control Add Form visibility
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success", // 'success' | 'error' | 'warning' | 'info'
+  });
 
   useEffect(() => {
     fetchExperiences();
@@ -73,7 +80,11 @@ const Experiences = () => {
   const handleAdd = () => {
     // Basic validation (optional but recommended)
     if (!newExp.job_title || !newExp.company || !newExp.start_date) {
-      alert("Please fill in the required fields: Job Title, Company, and Start Date.");
+      setSnackbar({
+        open: true,
+        message: "Please fill in the required fields: Job Title, Company, and Start Date.",
+        severity: "warning",
+      });
       return;
     }
 
@@ -92,17 +103,25 @@ const Experiences = () => {
           certificate: "",
         });
         setIsAddOpen(false); // Close the add form after adding
+        setSnackbar({
+          open: true,
+          message: "Experience added successfully!",
+          severity: "success",
+        });
       })
       .catch((error) => {
         console.error(error);
-        alert("Failed to add experience. Please try again.");
+        setSnackbar({
+          open: true,
+          message: "Failed to add experience. Please try again.",
+          severity: "error",
+        });
       });
   };
 
-  const handleEditClick = (id) => {
-    setEditingId(id);
-    const expToEdit = experiences.find((exp) => exp.id === id);
-    setEditedExp({ ...expToEdit });
+  const handleEditClick = (index) => {
+    setEditingIndex(index);
+    setEditedExp({ ...experiences[index] });
   };
 
   // Handle changes in the Edit Experience form
@@ -128,48 +147,69 @@ const Experiences = () => {
     setEditedExp({ ...editedExp, [field]: updatedArray });
   };
 
-  const handleSaveEdit = (id) => {
+  const handleSaveEdit = (index) => {
     // Basic validation (optional but recommended)
     if (!editedExp.job_title || !editedExp.company || !editedExp.start_date) {
-      alert("Please fill in the required fields: Job Title, Company, and Start Date.");
+      setSnackbar({
+        open: true,
+        message: "Please fill in the required fields: Job Title, Company, and Start Date.",
+        severity: "warning",
+      });
       return;
     }
 
     api
-      .put(`/api/experiences/${id}`, editedExp)
+      .put(`/api/experiences/${index}`, editedExp)
       .then((response) => {
-        const updatedExperiences = experiences.map((exp) =>
-          exp.id === id ? response.data : exp
-        );
+        const updatedExperiences = [...experiences];
+        updatedExperiences[index] = response.data;
         setExperiences(updatedExperiences);
-        setEditingId(null);
+        setEditingIndex(null);
         setEditedExp({});
+        setSnackbar({
+          open: true,
+          message: "Experience updated successfully!",
+          severity: "success",
+        });
       })
       .catch((error) => {
         console.error(error);
-        alert("Failed to update experience. Please try again.");
+        setSnackbar({
+          open: true,
+          message: "Failed to update experience. Please try again.",
+          severity: "error",
+        });
       });
   };
 
   const handleCancelEdit = () => {
-    setEditingId(null);
+    setEditingIndex(null);
     setEditedExp({});
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (index) => {
     if (!window.confirm("Are you sure you want to delete this experience?")) {
       return;
     }
 
     api
-      .delete(`/api/experiences/${id}`)
+      .delete(`/api/experiences/${index}`)
       .then(() => {
-        const updatedExperiences = experiences.filter((exp) => exp.id !== id);
+        const updatedExperiences = experiences.filter((_, i) => i !== index);
         setExperiences(updatedExperiences);
+        setSnackbar({
+          open: true,
+          message: "Experience deleted successfully!",
+          severity: "success",
+        });
       })
       .catch((error) => {
         console.error(error);
-        alert("Failed to delete experience. Please try again.");
+        setSnackbar({
+          open: true,
+          message: "Failed to delete experience. Please try again.",
+          severity: "error",
+        });
       });
   };
 
@@ -184,15 +224,15 @@ const Experiences = () => {
       </Typography>
 
       {/* List of Experiences */}
-      {experiences.map((exp, idx) => (
-        <Accordion key={exp.id}>
+      {experiences.map((exp, index) => (
+        <Accordion key={index}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography variant="h6">
               {exp.job_title} at {exp.company}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {editingId === exp.id ? (
+            {editingIndex === index ? (
               <Box
                 component="form"
                 sx={{
@@ -245,19 +285,19 @@ const Experiences = () => {
                     Description
                   </Typography>
                   <Stack spacing={2}>
-                    {editedExp.description.map((desc, index) => (
-                      <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                    {editedExp.description.map((desc, idx) => (
+                      <Box key={idx} sx={{ display: "flex", alignItems: "center" }}>
                         <TextField
                           value={desc}
                           onChange={(e) =>
-                            handleChangeEditExpArray("description", index, e.target.value)
+                            handleChangeEditExpArray("description", idx, e.target.value)
                           }
-                          label={`Description ${index + 1}`}
+                          label={`Description ${idx + 1}`}
                           fullWidth
                         />
                         <IconButton
                           color="error"
-                          onClick={() => handleRemoveEditExpArrayItem("description", index)}
+                          onClick={() => handleRemoveEditExpArrayItem("description", idx)}
                           aria-label="remove description"
                           disabled={editedExp.description.length === 1}
                         >
@@ -282,19 +322,19 @@ const Experiences = () => {
                     Tech Stack
                   </Typography>
                   <Stack spacing={2}>
-                    {editedExp.tech_stack.map((tech, index) => (
-                      <Box key={index} sx={{ display: "flex", alignItems: "center" }}>
+                    {editedExp.tech_stack.map((tech, idx) => (
+                      <Box key={idx} sx={{ display: "flex", alignItems: "center" }}>
                         <TextField
                           value={tech}
                           onChange={(e) =>
-                            handleChangeEditExpArray("tech_stack", index, e.target.value)
+                            handleChangeEditExpArray("tech_stack", idx, e.target.value)
                           }
-                          label={`Technology ${index + 1}`}
+                          label={`Technology ${idx + 1}`}
                           fullWidth
                         />
                         <IconButton
                           color="error"
-                          onClick={() => handleRemoveEditExpArrayItem("tech_stack", index)}
+                          onClick={() => handleRemoveEditExpArrayItem("tech_stack", idx)}
                           aria-label="remove technology"
                           disabled={editedExp.tech_stack.length === 1}
                         >
@@ -333,7 +373,7 @@ const Experiences = () => {
                     variant="contained"
                     color="primary"
                     startIcon={<SaveIcon />}
-                    onClick={() => handleSaveEdit(exp.id)}
+                    onClick={() => handleSaveEdit(index)}
                   >
                     Save
                   </Button>
@@ -361,8 +401,8 @@ const Experiences = () => {
                     <strong>Description:</strong>
                   </Typography>
                   <ul>
-                    {exp.description.map((desc, index) => (
-                      <li key={index}>{desc}</li>
+                    {exp.description.map((desc, idx) => (
+                      <li key={idx}>{desc}</li>
                     ))}
                   </ul>
                 </Box>
@@ -373,8 +413,8 @@ const Experiences = () => {
                     <strong>Tech Stack:</strong>
                   </Typography>
                   <ul>
-                    {exp.tech_stack.map((tech, index) => (
-                      <li key={index}>{tech}</li>
+                    {exp.tech_stack.map((tech, idx) => (
+                      <li key={idx}>{tech}</li>
                     ))}
                   </ul>
                 </Box>
@@ -395,14 +435,14 @@ const Experiences = () => {
                 <Box sx={{ display: "flex", gap: 1, marginTop: 2 }}>
                   <IconButton
                     color="primary"
-                    onClick={() => handleEditClick(exp.id)}
+                    onClick={() => handleEditClick(index)}
                     aria-label="edit experience"
                   >
                     <EditIcon />
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => handleDelete(exp.id)}
+                    onClick={() => handleDelete(index)}
                     aria-label="delete experience"
                   >
                     <DeleteIcon />
@@ -410,10 +450,10 @@ const Experiences = () => {
                 </Box>
               </Box>
             )}
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      
+          </AccordionDetails>
+        </Accordion>
+      ))}
+
       {/* Plus Button to Add New Experience */}
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
         <IconButton
@@ -597,6 +637,22 @@ const Experiences = () => {
           </Box>
         </Box>
       </Collapse>
+
+      {/* Snackbar for User Feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

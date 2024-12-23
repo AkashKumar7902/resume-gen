@@ -22,7 +22,7 @@
                 "JavaScript",
                 "React",
                 "Node.js",
-                "Docker"
+                "xyz"
             ]
         },
         {
@@ -58,20 +58,20 @@
     ],
     "projects": [
         {
-            "project_name": "Personal Portfolio",
+            "demo_link": "https://johndoe.com/demo",
             "description": [
                 "Designed and developed a personal portfolio website to showcase projects and skills.",
                 "Implemented a responsive design for optimal viewing on all devices."
             ],
+            "end_date": "July 2020",
+            "link": "https://johndoe.com",
+            "project_name": "Personal Portfolio",
+            "start_date": "March 2020",
             "technologies_used": [
                 "React",
                 "CSS",
-                "Node.js"
-            ],
-            "link": "https://johndoe.com",
-            "demo_link": "https://johndoe.com/demo",
-            "start_date": "March 2020",
-            "end_date": "July 2020"
+                "hey"
+            ]
         },
         {
             "project_name": "E-commerce Platform",

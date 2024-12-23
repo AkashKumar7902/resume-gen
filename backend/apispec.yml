@@ -1,0 +1,422 @@
+openapi: 3.0.3
+info:
+  title: Backend API
+  version: 1.0.0
+paths:
+  /api/health:
+    get:
+      summary: Health Check
+      responses:
+        '200':
+          description: Returns backend status
+  
+  /api/profile:
+    get:
+      summary: Get user profile
+      responses:
+        '200':
+          description: Returns the current profile
+    put:
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: Returns updated profile
+  
+  /api/experiences:
+    get:
+      summary: List experiences
+      responses:
+        '200':
+          description: Returns all experiences
+    post:
+      summary: Add new experience
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Experience'
+      responses:
+        '201':
+          description: Returns newly created experience
+
+  /api/experiences/{index}:
+    put:
+      summary: Update experience by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Experience'
+      responses:
+        '200':
+          description: Returns updated experience
+        '404':
+          description: Index not found
+    delete:
+      summary: Delete experience by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Experience deleted
+        '404':
+          description: Index not found
+
+  /api/education:
+    get:
+      summary: List education entries
+      responses:
+        '200':
+          description: Returns all education entries
+    post:
+      summary: Add new education entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Education'
+      responses:
+        '201':
+          description: Returns newly created education entry
+
+  /api/education/{index}:
+    put:
+      summary: Update education entry by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Education'
+      responses:
+        '200':
+          description: Returns updated education entry
+        '404':
+          description: Index not found
+    delete:
+      summary: Delete education entry by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Education entry deleted
+        '404':
+          description: Index not found
+
+  /api/projects:
+    get:
+      summary: List projects
+      responses:
+        '200':
+          description: Returns all projects
+    post:
+      summary: Add new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Returns newly created project
+
+  /api/projects/{index}:
+    put:
+      summary: Update project by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Returns updated project
+        '404':
+          description: Index not found
+    delete:
+      summary: Delete project by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project deleted
+        '404':
+          description: Index not found
+
+  /api/skills:
+    get:
+      summary: List skills
+      responses:
+        '200':
+          description: Returns all skills
+    post:
+      summary: Add new skill
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '201':
+          description: Returns newly created skill
+
+  /api/skills/{index}:
+    put:
+      summary: Update skill by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        '200':
+          description: Returns updated skill
+        '404':
+          description: Index not found
+    delete:
+      summary: Delete skill by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Skill deleted
+        '404':
+          description: Index not found
+
+  /api/achievements:
+    get:
+      summary: List achievements
+      responses:
+        '200':
+          description: Returns all achievements
+    post:
+      summary: Add new achievement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Achievement'
+      responses:
+        '201':
+          description: Returns newly created achievement
+
+  /api/achievements/{index}:
+    put:
+      summary: Update achievement by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Achievement'
+      responses:
+        '200':
+          description: Returns updated achievement
+        '404':
+          description: Index not found
+    delete:
+      summary: Delete achievement by index
+      parameters:
+        - in: path
+          name: index
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Achievement deleted
+        '404':
+          description: Index not found
+
+  /api/templates:
+    get:
+      summary: List templates
+      responses:
+        '200':
+          description: Returns a list of templates
+
+  /api/templates/upload:
+    post:
+      summary: Upload a new template
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TemplateUpload'
+      responses:
+        '200':
+          description: Returns status of template upload
+
+  /api/templates/{filename}:
+    delete:
+      summary: Delete a template
+      parameters:
+        - in: path
+          name: filename
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Template file deleted
+
+  /api/templates/select:
+    post:
+      summary: Select a template
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateSelect'
+      responses:
+        '200':
+          description: Template selected
+
+  /api/upload-to-drive:
+    post:
+      summary: Upload generated files to Google Drive
+      responses:
+        '200':
+          description: File uploaded successfully
+
+  /api/generate-resume:
+    post:
+      summary: Generate a resume using the selected template
+      responses:
+        '200':
+          description: Resume PDF generated
+components:
+  schemas:
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+    Experience:
+      type: object
+      properties:
+        company:
+          type: string
+        role:
+          type: string
+    Education:
+      type: object
+      properties:
+        institution:
+          type: string
+        degree:
+          type: string
+    Project:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    Skill:
+      type: object
+      properties:
+        name:
+          type: string
+        level:
+          type: string
+    Achievement:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    TemplateUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    TemplateSelect:
+      type: object
+      properties:
+        templateName:
+          type: string
+      DriveUpload:
+        type: object
+        properties:
+          filePath:
+            type: string
+            description: Local path of file to be uploaded
+          mimeType:
+            type: string
+            description: MIME type of the file
+      ResumeRequest:
+        type: object
+        properties:
+          profileId:
+            type: string
+            description: Identifier for the user profile
+          templateName:
+            type: string
+            description: Selected template name

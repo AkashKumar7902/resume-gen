@@ -1,0 +1,128 @@
+{
+    "profile": {
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "phone": "123-456-7890",
+        "linkedin": "https://linkedin.com/in/xyz",
+        "github": "https://github.com/johndoe"
+    },
+    "experiences": [
+        {
+            "certificate": "https://techcorp.com/certificates/johndoe-awesome-app",
+            "company": "Tech Corp",
+            "description": [
+                "Developed and maintained web applications.",
+                "Collaborated with cross-functional teams to define and achieve project goals."
+            ],
+            "end_date": "Present",
+            "job_title": "Software Engineer",
+            "link": "https://techcorp.com/projects/awesome-app",
+            "start_date": "Jan 2020",
+            "tech_stack": [
+                "JavaScript",
+                "React",
+                "Node.js",
+                "Docker"
+            ]
+        },
+        {
+            "job_title": "Junior Developer",
+            "company": "Web Solutions",
+            "start_date": "June 2018",
+            "end_date": "December 2019",
+            "description": [
+                "Assisted in the development of client websites.",
+                "Implemented responsive design principles to enhance user experience."
+            ],
+            "tech_stack": [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "jQuery"
+            ],
+            "link": "https://websolutions.com/projects/client-website",
+            "certificate": "https://websolutions.com/certificates/johndoe-client-website"
+        }
+    ],
+    "education": [
+        {
+            "degree": "B.Sc. in Computer Science",
+            "institution": "University XYZ",
+            "start_date": "September 2014",
+            "end_date": "June 2018",
+            "description": [
+                "Focused on software development and algorithms.",
+                "Graduated with Honors."
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "project_name": "Personal Portfolio",
+            "description": [
+                "Designed and developed a personal portfolio website to showcase projects and skills.",
+                "Implemented a responsive design for optimal viewing on all devices."
+            ],
+            "technologies_used": [
+                "React",
+                "CSS",
+                "Node.js"
+            ],
+            "link": "https://johndoe.com",
+            "demo_link": "https://johndoe.com/demo",
+            "start_date": "March 2020",
+            "end_date": "July 2020"
+        },
+        {
+            "project_name": "E-commerce Platform",
+            "description": [
+                "Developed a full-stack e-commerce platform with user authentication and payment integration.",
+                "Implemented RESTful APIs for product management and order processing."
+            ],
+            "technologies_used": [
+                "Python",
+                "Django",
+                "PostgreSQL",
+                "React"
+            ],
+            "link": "https://github.com/johndoe/e-commerce-platform",
+            "demo_link": "https://ecommerce.johndoe.com",
+            "start_date": "August 2019",
+            "end_date": "February 2020"
+        }
+    ],
+    "skills": [
+        {
+            "skill_type": "Programming Languages",
+            "skill_names": [
+                "JavaScript",
+                "Python",
+                "Java",
+                "C++"
+            ]
+        },
+        {
+            "skill_type": "Frameworks & Libraries",
+            "skill_names": [
+                "React",
+                "Node.js",
+                "Django",
+                "Express.js"
+            ]
+        },
+        {
+            "skill_type": "Tools & Platforms",
+            "skill_names": [
+                "Git",
+                "Docker",
+                "AWS",
+                "Jenkins"
+            ]
+        }
+    ],
+    "achievements": [
+        "Awarded Employee of the Year at Tech Corp (2021).",
+        "Completed the Full-Stack Web Development Bootcamp with Distinction.",
+        "Published a research paper on machine learning algorithms in XYZ Journal."
+    ]
+}

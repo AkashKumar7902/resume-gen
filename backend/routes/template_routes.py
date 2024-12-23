@@ -1,6 +1,6 @@
 # backend/routes/template_routes.py
 
-from flask import Blueprint, request, jsonify, send_from_directory, current_app
+from flask import Blueprint, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from utils.template_manager import TemplateManager
 from config import Config
@@ -53,25 +53,10 @@ def delete_template(filename):
     except FileNotFoundError as e:
         return jsonify({"error": str(e)}), 404
 
-@template_bp.route('/api/templates/select', methods=['POST'])
-def select_template():
-    data = request.json
-    filename = data.get('filename')
-    if not filename:
-        return jsonify({"error": "Filename is required."}), 400
-
-    try:
-        template_manager.select_template(filename)
-        return jsonify({"message": f"Template '{filename}' selected."}), 200
-    except FileNotFoundError as e:
-        return jsonify({"error": str(e)}), 404
-
-# **New Route to Serve Preview Images**
+# New Route to Serve Preview Images
 @template_bp.route('/api/templates/previews/<filename>', methods=['GET'])
 def get_preview(filename):
     return send_from_directory(template_manager.previews_dir, filename)
-
-# **New Routes for Editing Templates**
 
 @template_bp.route('/api/templates/<filename>/content', methods=['GET'])
 def get_template_content(filename):

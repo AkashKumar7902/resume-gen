@@ -12,7 +12,6 @@ class TemplateManager:
             os.makedirs(self.templates_dir)
         if not os.path.exists(self.previews_dir):
             os.makedirs(self.previews_dir)
-        self.selected_template_file = os.path.join(self.templates_dir, 'selected_template.txt')
 
     def allowed_file(self, filename, allowed_extensions):
         if isinstance(allowed_extensions, tuple):
@@ -77,21 +76,6 @@ class TemplateManager:
             return True
         else:
             raise FileNotFoundError("Template file does not exist.")
-
-    def select_template(self, filename):
-        if filename not in [t['filename'] for t in self.list_templates()]:
-            raise FileNotFoundError("Template file does not exist.")
-        with open(self.selected_template_file, 'w') as f:
-            f.write(filename)
-
-    def get_selected_template(self):
-        if os.path.exists(self.selected_template_file):
-            with open(self.selected_template_file, 'r') as f:
-                return f.read().strip()
-        else:
-            return None
-
-    # **New Methods for Editing Templates**
 
     def get_template_content(self, filename):
         if not self.allowed_file(filename, '.tex'):

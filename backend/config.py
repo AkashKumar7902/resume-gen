@@ -11,6 +11,7 @@ class Config:
     PROFILE_PATH = os.path.join(os.getcwd(), 'data', 'profile.json')
     TEMPLATES_DIR = os.path.join(os.getcwd(), 'templates')
     GENERATED_PDF_DIR = os.path.join(os.getcwd(), 'generated_pdfs')
+    PREVIEWS_DIR = os.path.join(os.getcwd(), 'templates', 'previews')  # New Directory for Previews
 
     # LaTeX Compiler Settings
     LATEX_COMPILER = 'pdflatex'  # or 'xelatex'

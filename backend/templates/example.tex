@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{fontawesome}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{12pt}{6pt}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{{{ profile.name }}}} \\
+    \vspace{2mm}
+    {{ profile.title }} \\
+    \vspace{2mm}
+    \href{mailto:{{ profile.email }}}{\faEnvelope\ {{ profile.email }}} |
+    \href{https://{{ profile.linkedin }}}{\faLinkedin\ LinkedIn} |
+    \href{https://{{ profile.github }}}{\faGithub\ GitHub}
+\end{center}
+
+\section*{Profile}
+{{ profile.description }}
+
+\section*{Experience}
+\begin{itemize}[leftmargin=0.5cm]
+    {% for exp in experiences %}
+    \item \textbf{{ exp.role }} at \textbf{{ exp.company }} \hfill {{ exp.duration }}
+    \begin{itemize}
+        \item {{ exp.description }}
+        \item \href{https://{{ exp.link }}}{Project Link}
+        \item Certificate: \href{https://{{ exp.certificate }}}{Download}
+    \end{itemize}
+    {% endfor %}
+\end{itemize}
+
+\section*{Education}
+\begin{itemize}[leftmargin=0.5cm]
+    {% for edu in education %}
+    \item \textbf{{ edu.degree }} - {{ edu.institution }} \hfill {{ edu.year }}
+    \end{itemize}
+    {% endfor %}
+\end{itemize}
+
+\section*{Projects}
+\begin{itemize}[leftmargin=0.5cm]
+    {% for project in projects %}
+    \item \textbf{{ project.name }}: {{ project.description }}
+    {% endfor %}
+\end{itemize}
+
+\section*{Skills}
+\begin{itemize}[leftmargin=0.5cm]
+    {% for skill in skills %}
+    \item {{ skill.name }} - {{ skill.level }}
+    {% endfor %}
+\end{itemize}
+
+\section*{Achievements}
+\begin{itemize}[leftmargin=0.5cm]
+    {% for achievement in achievements %}
+    \item \textbf{{ achievement.title }}: {{ achievement.description }}
+    {% endfor %}
+\end{itemize}
+
+\end{document}

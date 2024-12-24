@@ -1,6 +1,6 @@
 // src/components/Templates/Templates.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Grid,
@@ -19,16 +19,16 @@ import {
   CardMedia,
   CardContent,
   CardActions,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   Visibility as VisibilityIcon,
   Upload as UploadIcon,
-} from '@mui/icons-material';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import api from '../../services/api';
+} from "@mui/icons-material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import api from "../../services/api";
 
 const Templates = () => {
   const [templates, setTemplates] = useState([]);
@@ -37,7 +37,7 @@ const Templates = () => {
   const [uploadImageFile, setUploadImageFile] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentEditTemplate, setCurrentEditTemplate] = useState(null);
-  const [editContent, setEditContent] = useState('');
+  const [editContent, setEditContent] = useState("");
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState(null);
   const [generateLoading, setGenerateLoading] = useState(false);
@@ -49,32 +49,32 @@ const Templates = () => {
 
   const fetchTemplates = async () => {
     try {
-      const response = await api.get('/api/templates');
+      const response = await api.get("/api/templates");
       setTemplates(response.data);
     } catch (error) {
-      console.error('Error fetching templates:', error);
-      toast.error('Failed to fetch templates.');
+      console.error("Error fetching templates:", error);
+      toast.error("Failed to fetch templates.");
     }
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!uploadTexFile) {
-      toast.error('Please select a .tex file to upload.');
+      toast.error("Please select a .tex file to upload.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('template', uploadTexFile);
+    formData.append("template", uploadTexFile);
     if (uploadImageFile) {
-      formData.append('preview', uploadImageFile);
+      formData.append("preview", uploadImageFile);
     }
 
     setUploading(true);
     try {
-      const response = await api.post('/api/templates/upload', formData, {
+      const response = await api.post("/api/templates/upload", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       toast.success(response.data.message);
@@ -82,8 +82,9 @@ const Templates = () => {
       setUploadImageFile(null);
       fetchTemplates();
     } catch (error) {
-      console.error('Error uploading template:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to upload template.';
+      console.error("Error uploading template:", error);
+      const errorMsg =
+        error.response?.data?.error || "Failed to upload template.";
       toast.error(errorMsg);
     } finally {
       setUploading(false);
@@ -94,14 +95,17 @@ const Templates = () => {
     if (!templateToDelete) return;
 
     try {
-      await api.delete(`/api/templates/${encodeURIComponent(templateToDelete)}`);
-      toast.success('Template deleted successfully.');
+      await api.delete(
+        `/api/templates/${encodeURIComponent(templateToDelete)}`
+      );
+      toast.success("Template deleted successfully.");
       setDeleteConfirmOpen(false);
       setTemplateToDelete(null);
       fetchTemplates();
     } catch (error) {
-      console.error('Error deleting template:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to delete template.';
+      console.error("Error deleting template:", error);
+      const errorMsg =
+        error.response?.data?.error || "Failed to delete template.";
       toast.error(errorMsg);
     }
   };
@@ -110,12 +114,15 @@ const Templates = () => {
     if (!currentEditTemplate) return;
 
     try {
-      const response = await api.get(`/api/templates/${encodeURIComponent(currentEditTemplate)}/content`);
+      const response = await api.get(
+        `/api/templates/${encodeURIComponent(currentEditTemplate)}/content`
+      );
       setEditContent(response.data.content);
       setEditDialogOpen(true);
     } catch (error) {
-      console.error('Error fetching template content:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to fetch template content.';
+      console.error("Error fetching template content:", error);
+      const errorMsg =
+        error.response?.data?.error || "Failed to fetch template content.";
       toast.error(errorMsg);
     }
   };
@@ -125,16 +132,17 @@ const Templates = () => {
       await api.put(
         `/api/templates/${encodeURIComponent(currentEditTemplate)}/content`,
         { content: editContent },
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { "Content-Type": "application/json" } }
       );
-      toast.success('Template updated successfully.');
+      toast.success("Template updated successfully.");
       setEditDialogOpen(false);
       setCurrentEditTemplate(null);
-      setEditContent('');
+      setEditContent("");
       fetchTemplates();
     } catch (error) {
-      console.error('Error updating template:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to update template.';
+      console.error("Error updating template:", error);
+      const errorMsg =
+        error.response?.data?.error || "Failed to update template.";
       toast.error(errorMsg);
     }
   };
@@ -142,32 +150,38 @@ const Templates = () => {
   const handleGenerateResume = async (templateName) => {
     const email = emailMap[templateName];
     if (!email) {
-      toast.error('Please enter an email address.');
+      toast.error("Please enter an email address.");
       return;
     }
 
     setGenerateLoading(true);
     try {
       const response = await api.post(
-        '/api/generate-resume',
+        "/api/generate-resume",
         { template: templateName, email },
-        { responseType: 'blob' }
+        { responseType: "blob" }
       );
 
       // Create a blob from the response
-      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
-      // Open the PDF in a new window/tab
-      window.open(url, '_blank');
+      // Create a link element and trigger download with the desired filename
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${email}.pdf`); // Use the desired filename
+      document.body.appendChild(link);
+      link.click();
 
-      // Optionally revoke the URL after some time to free memory
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      // Clean up
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
-      toast.success('Resume generated successfully.');
+      toast.success("Resume generated successfully.");
     } catch (error) {
-      console.error('Error generating resume:', error);
-      const errorMsg = error.response?.data?.error || 'Failed to generate resume.';
+      console.error("Error generating resume:", error);
+      const errorMsg =
+        error.response?.data?.error || "Failed to generate resume.";
       toast.error(errorMsg);
     } finally {
       setGenerateLoading(false);
@@ -176,9 +190,9 @@ const Templates = () => {
 
   const handleView = (previewUrl) => {
     if (previewUrl) {
-      window.open(previewUrl, '_blank');
+      window.open(previewUrl, "_blank");
     } else {
-      toast.info('No preview available for this template.');
+      toast.info("No preview available for this template.");
     }
   };
 
@@ -246,7 +260,7 @@ const Templates = () => {
                 fullWidth
                 disabled={uploading}
               >
-                {uploading ? 'Uploading...' : 'Upload'}
+                {uploading ? "Uploading..." : "Upload"}
               </Button>
             </Grid>
           </Grid>
@@ -260,12 +274,14 @@ const Templates = () => {
       <Grid container spacing={3}>
         {templates.map((template) => (
           <Grid item xs={12} sm={6} md={4} key={template.filename}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <Card
+              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+            >
               {/* Template Image */}
               <CardMedia
                 component="img"
                 height="140"
-                image={template.preview_url || '/placeholder-image.png'}
+                image={template.preview_url || "/placeholder-image.png"}
                 alt={template.filename}
               />
               {/* Template Details */}
@@ -278,14 +294,14 @@ const Templates = () => {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={emailMap[template.filename] || ''}
+                  value={emailMap[template.filename] || ""}
                   onChange={(e) =>
                     handleEmailChange(template.filename, e.target.value)
                   }
                 />
               </CardContent>
               {/* Action Buttons */}
-              <CardActions sx={{ justifyContent: 'space-between', padding: 2 }}>
+              <CardActions sx={{ justifyContent: "space-between", padding: 2 }}>
                 <Button
                   variant="contained"
                   color="primary"
@@ -294,7 +310,7 @@ const Templates = () => {
                   fullWidth
                   sx={{ mr: 1 }}
                 >
-                  {generateLoading ? 'Generating...' : 'Generate Resume'}
+                  {generateLoading ? "Generating..." : "Generate Resume"}
                 </Button>
                 <Box>
                   <Tooltip title="View Preview">
@@ -372,19 +388,14 @@ const Templates = () => {
         <DialogContent>
           <Typography>
             Are you sure you want to delete the template "
-            <strong>{templateToDelete}</strong>"? This action cannot be
-            undone.
+            <strong>{templateToDelete}</strong>"? This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteConfirmOpen(false)} color="secondary">
             Cancel
           </Button>
-          <Button
-            onClick={handleDelete}
-            color="error"
-            variant="contained"
-          >
+          <Button onClick={handleDelete} color="error" variant="contained">
             Delete
           </Button>
         </DialogActions>

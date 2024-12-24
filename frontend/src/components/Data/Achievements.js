@@ -37,6 +37,7 @@ const Achievement = () => {
         value={newAchievement}
         onChange={handleChange}
         label="Achievement"
+        fullWidth
       />
       <Button variant="contained" color="primary" onClick={handleAdd}>
         Add Achievement

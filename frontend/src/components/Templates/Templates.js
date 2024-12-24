@@ -13,17 +13,17 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Tooltip,
   Box,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
   Edit as EditIcon,
   Visibility as VisibilityIcon,
-  ExpandMore as ExpandMoreIcon,
   Upload as UploadIcon,
 } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
@@ -158,16 +158,11 @@ const Templates = () => {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
 
-      // Create a link element and trigger download
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'resume.pdf');
-      document.body.appendChild(link);
-      link.click();
+      // Open the PDF in a new window/tab
+      window.open(url, '_blank');
 
-      // Clean up
-      link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // Optionally revoke the URL after some time to free memory
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
 
       toast.success('Resume generated successfully.');
     } catch (error) {
@@ -194,6 +189,7 @@ const Templates = () => {
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <ToastContainer />
+      {/* Upload New Template Section */}
       <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
         <Typography variant="h6" gutterBottom>
           Upload New Template
@@ -257,102 +253,83 @@ const Templates = () => {
         </form>
       </Paper>
 
+      {/* Available Templates Section */}
       <Typography variant="h6" gutterBottom>
         Available Templates
       </Typography>
       <Grid container spacing={3}>
         {templates.map((template) => (
-          <Grid item xs={12} md={6} lg={4} key={template.filename}>
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`${template.filename}-content`}
-                id={`${template.filename}-header`}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    width: '100%',
-                  }}
+          <Grid item xs={12} sm={6} md={4} key={template.filename}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+              {/* Template Image */}
+              <CardMedia
+                component="img"
+                height="140"
+                image={template.preview_url || '/placeholder-image.png'}
+                alt={template.filename}
+              />
+              {/* Template Details */}
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography gutterBottom variant="h6" component="div">
+                  {template.filename}
+                </Typography>
+                <TextField
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  value={emailMap[template.filename] || ''}
+                  onChange={(e) =>
+                    handleEmailChange(template.filename, e.target.value)
+                  }
+                />
+              </CardContent>
+              {/* Action Buttons */}
+              <CardActions sx={{ justifyContent: 'space-between', padding: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleGenerateResume(template.filename)}
+                  disabled={generateLoading}
+                  fullWidth
+                  sx={{ mr: 1 }}
                 >
-                  <Box
-                    component="img"
-                    src={template.preview_url || '/placeholder-image.png'}
-                    alt={template.filename}
-                    sx={{
-                      width: 80,
-                      height: 60,
-                      objectFit: 'cover',
-                      mr: 2,
-                      borderRadius: 1,
-                      border: '1px solid #ccc',
-                    }}
-                  />
-                  <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-                    {template.filename}
-                  </Typography>
-                </Box>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={12} sm={8}>
-                    <TextField
-                      label="Email"
-                      variant="outlined"
-                      fullWidth
-                      value={emailMap[template.filename] || ''}
-                      onChange={(e) =>
-                        handleEmailChange(template.filename, e.target.value)
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Button
-                      variant="contained"
+                  {generateLoading ? 'Generating...' : 'Generate Resume'}
+                </Button>
+                <Box>
+                  <Tooltip title="View Preview">
+                    <IconButton
                       color="primary"
-                      fullWidth
-                      onClick={() => handleGenerateResume(template.filename)}
-                      disabled={generateLoading}
+                      onClick={() => handleView(template.preview_url)}
                     >
-                      {generateLoading ? 'Generating...' : 'Generate Resume'}
-                    </Button>
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
-                <Tooltip title="View Preview">
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleView(template.preview_url)}
-                  >
-                    <VisibilityIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Edit Template">
-                  <IconButton
-                    color="secondary"
-                    onClick={() => {
-                      setCurrentEditTemplate(template.filename);
-                      handleEdit();
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete Template">
-                  <IconButton
-                    color="error"
-                    onClick={() => {
-                      setTemplateToDelete(template.filename);
-                      setDeleteConfirmOpen(true);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            </Accordion>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Edit Template">
+                    <IconButton
+                      color="secondary"
+                      onClick={() => {
+                        setCurrentEditTemplate(template.filename);
+                        handleEdit();
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete Template">
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setTemplateToDelete(template.filename);
+                        setDeleteConfirmOpen(true);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </CardActions>
+            </Card>
           </Grid>
         ))}
       </Grid>

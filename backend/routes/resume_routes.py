@@ -36,14 +36,19 @@ def generate_resume():
     # Load the template
     env = Environment(
         loader=FileSystemLoader(template_manager.templates_dir),
-        autoescape=select_autoescape(['tex'])
+        autoescape=select_autoescape(['tex']),
+        trim_blocks=True,
+        lstrip_blocks=True
     )
     try:
         template = env.get_template(selected_template)
     except Exception as e:
-        print("err")
-        return jsonify({"error": f"Error loading template: {str(e)}"}), 500
+        if hasattr(e, 'lineno'):
+            print(f"Error on line: {e.lineno}")
 
+        print("err", str(e))
+        return jsonify({"error": f"Error loading template: {str(e)}"}), 500
+    print("no err")
     # Get data
     profile = data_handler.get_profile()
     experiences = data_handler.get_experiences()
@@ -64,6 +69,7 @@ def generate_resume():
         "achievements": achievements
     }
 
+
     try:
         # Render LaTeX content
         rendered_tex = template.render(data_dict)
@@ -73,8 +79,17 @@ def generate_resume():
         pdf_path = latex_compiler.compile_latex(rendered_tex, output_filename)
 
         # Send PDF for download
-        return send_file(pdf_path, as_attachment=True, attachment_filename="resume.pdf")
+        print(f"{email}.pdf")
+        return send_file(
+            pdf_path,
+            mimetype='application/pdf',
+            as_attachment=False,
+            download_name=f"{email}.pdf"  # For Flask >= 2.0
+            # For older Flask versions, use `attachment_filename` instead of `download_name`
+        )
     except RuntimeError as e:
+        print(f"An error occurred: {str(e)}")
         return jsonify({"error": str(e)}), 500
     except Exception as e:
+        print(f"An exception error occurred: {str(e)}")
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500

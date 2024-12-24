@@ -5,63 +5,84 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{titlesec}
+\usepackage{xcolor}
 
+% Define colors
+\definecolor{linkcolor}{RGB}{0, 114, 187}
+\hypersetup{colorlinks=true, urlcolor=linkcolor}
+
+% Section formatting
 \titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
 \titlespacing{\section}{0pt}{12pt}{6pt}
 
 \begin{document}
 
+% Header
 \begin{center}
-    {\LARGE \textbf{{{ profile.name }}}} \\
+    {\LARGE \textbf{ {{- profile.name -}} }} \\
     \vspace{2mm}
-    {{ profile.title }} \\
-    \vspace{2mm}
-    \href{mailto:{{ profile.email }}}{\faEnvelope\ {{ profile.email }}} |
-    \href{https://{{ profile.linkedin }}}{\faLinkedin\ LinkedIn} |
-    \href{https://{{ profile.github }}}{\faGithub\ GitHub}
+    \faEnvelope\, \href{mailto:{{ profile.email }}}{ {{- profile.email -}} } $|$ 
+    \faPhone\, {{- profile.phone -}} \\
+    \faLinkedin\, \href{ {{- profile.linkedin -}} }{LinkedIn} $|$ 
+    \faGithub\, \href{ {{- profile.github -}} }{GitHub}
 \end{center}
 
-\section*{Profile}
-{{ profile.description }}
-
-\section*{Experience}
-\begin{itemize}[leftmargin=0.5cm]
-    {% for exp in experiences %}
-    \item \textbf{{ exp.role }} at \textbf{{ exp.company }} \hfill {{ exp.duration }}
-    \begin{itemize}
-        \item {{ exp.description }}
-        \item \href{https://{{ exp.link }}}{Project Link}
-        \item Certificate: \href{https://{{ exp.certificate }}}{Download}
-    \end{itemize}
+% Experience Section
+\section{Experience}
+{% for exp in experiences %}
+\noindent\textbf{ {{- exp.job_title -}} } \hfill { {{- exp.start_date -}} } -- { {{- exp.end_date -}} } \\
+\textit{ {{- exp.company -}} } {% if exp.link %}\href{ {{- exp.link -}} }{\small\faExternalLink}{% endif %}
+\begin{itemize}[leftmargin=*]
+    {% for desc in exp.description %}
+    \item { {{- desc -}} }
     {% endfor %}
 \end{itemize}
+\textbf{Tech Stack:} { {{- exp.tech_stack|join(", ") -}} }
+{% if exp.certificate %}
+\href{ {{- exp.certificate -}} }{\small [Certificate]}
+{% endif %}
+\vspace{2mm}
+{% endfor %}
 
-\section*{Education}
-\begin{itemize}[leftmargin=0.5cm]
-    {% for edu in education %}
-    \item \textbf{{ edu.degree }} - {{ edu.institution }} \hfill {{ edu.year }}
-    \end{itemize}
+% Education Section
+\section{Education}
+{% for edu in education %}
+\noindent\textbf{ {{- edu.degree -}} } \hfill { {{- edu.start_date -}} } -- { {{- edu.end_date -}} } \\
+\textit{ {{- edu.institution -}} }
+\begin{itemize}[leftmargin=*]
+    {% for desc in edu.description %}
+    \item { {{- desc -}} }
     {% endfor %}
 \end{itemize}
+{% endfor %}
 
-\section*{Projects}
-\begin{itemize}[leftmargin=0.5cm]
-    {% for project in projects %}
-    \item \textbf{{ project.name }}: {{ project.description }}
+% Projects Section
+\section{Projects}
+{% for proj in projects %}
+\noindent\textbf{ {{- proj.project_name -}} } 
+{% if proj.link %}\href{ {{- proj.link -}} }{\small\faGithub}{% endif %}
+{% if proj.demo_link %} \href{ {{- proj.demo_link -}} }{\small\faExternalLink}{% endif %}
+\hfill { {{- proj.start_date -}} } -- { {{- proj.end_date -}} }
+\begin{itemize}[leftmargin=*]
+    {% for desc in proj.description %}
+    \item { {{- desc -}} }
     {% endfor %}
 \end{itemize}
+\textbf{Technologies:} { {{- proj.technologies_used|join(", ") -}} }
+\vspace{2mm}
+{% endfor %}
 
-\section*{Skills}
-\begin{itemize}[leftmargin=0.5cm]
-    {% for skill in skills %}
-    \item {{ skill.name }} - {{ skill.level }}
-    {% endfor %}
-\end{itemize}
+% Skills Section
+\section{Skills}
+{% for skill in skills %}
+\textbf{ {{- skill.skill_type -}} :} { {{- skill.skill_names|join(", ") -}} }\\
+{% endfor %}
 
-\section*{Achievements}
-\begin{itemize}[leftmargin=0.5cm]
+% Achievements Section
+\section{Achievements}
+\begin{itemize}[leftmargin=*]
     {% for achievement in achievements %}
-    \item \textbf{{ achievement.title }}: {{ achievement.description }}
+    \item { {{- achievement -}} }
     {% endfor %}
 \end{itemize}
 
